@@ -1,8 +1,6 @@
 using Admin_Console.Data;
 using Admin_Console.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +13,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(identityConnectionString));
 
 builder.Services.AddDbContext<BackEndApplicationDbContext>(options =>
+    options.UseNpgsql(tcuConnectionString));
+
+builder.Services.AddDbContext<TCUContext>(options =>
     options.UseNpgsql(tcuConnectionString));
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -38,7 +39,6 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,6 +52,7 @@ else
     app.UseHsts();
 }
 
+         
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
