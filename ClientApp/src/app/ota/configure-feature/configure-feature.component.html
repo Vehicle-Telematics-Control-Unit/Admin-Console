@@ -1,1 +1,130 @@
-<p>configure-feature works!</p>
+<div class="center-text">
+  <h2>Configure Feature</h2>
+</div>
+
+<form #ConfigureFeatureForm="ngForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col">
+      <!-- Email input -->
+      <div class="form-outline">
+        <label class="form-label" for="model-id">Select Feature</label>
+        <ng-select id="feature-id"
+                   name="feature-id"
+                   [items]="featuresInfo"
+                   bindLabel="name"
+                   bindValue="id"
+                   placeholder="Select Feature"
+                   (change)="updateConfig($event)"
+                   >
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="col">
+      <!-- Name input -->
+      <div class="form-outline">
+        <label class="form-label" for="app-name">Feature Name</label>
+        <input [(ngModel)]="modifyFeatureFormInfo.appName"
+               required
+               type="text"
+               id="Feature-name"
+               name="Feature-name"
+               class="form-control" />
+      </div>
+    </div>
+
+  </div>
+
+  <hr />
+  <div class="row">
+    <div class="col">
+      <!-- Name input -->
+      <div class="form-outline">
+        <label class="form-label" for="release-id">Container release name</label>
+        <select id="release-id"
+                name="release-id"
+                [(ngModel)]="modifyFeatureFormInfo.releaseId"
+                required
+                class="form-control">
+          <option *ngFor="let release of releasesInfo" [value]="release.id">{{ release.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <!-- Name input -->
+      <div class="form-outline">
+        <label class="form-label" for="release-time">Release time</label>
+        <input type="datetime-local"
+               id="release-time"
+               name="release-time"
+               [(ngModel)]="modifyFeatureFormInfo.releaseTime"
+               required
+               class="form-control" />
+      </div>
+    </div>
+    <div class="col center-text">
+      <!-- Email input -->
+      <div class="form-outline">
+        <input type="submit"
+               id="release-feature"
+               name="release-feature"
+               class="btn btn-primary btn-lg"
+               [disabled]=ConfigureFeatureForm.invalid
+               value="Release feature" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-5 description-div">
+      <div class="row">
+        <label class="form-label" for="model-id">Distribution Models</label>
+        <ng-select id="model-id"
+                   name="model-id"
+                   [items]="modelsInfo"
+                   bindLabel="name"
+                   bindValue="id"
+                   [multiple]="true"
+                   placeholder="Select Models"
+                   [(ngModel)]="modifyFeatureFormInfo.modelId">
+        </ng-select>
+      </div>
+      <div class="description-div">
+        <label class="form-label" for="feature-description">Description</label>
+        <textarea class="form-control custom-margin"
+                  id="feature-description"
+                  name="feature-description"
+                  [(ngModel)]="modifyFeatureFormInfo.description"
+                  required
+                  rows="7"></textarea>
+      </div>
+    </div>
+    <div class="col-7 description-div config-params">
+      <h5 class="center-text">Configure feature parameters</h5>
+      <div class="row">
+        <label class="form-label" for="feature-env-vars">Enviroment Variables</label>
+        <textarea class="form-control"
+                  id="feature-env-vars"
+                  name="feature-env-vars"
+                  [(ngModel)]="modifyFeatureFormInfo.env_vars"
+                  rows="2"></textarea>
+      </div>
+      <div class="row">
+        <label class="form-label" for="feature-ports">Binded Ports</label>
+        <textarea class="form-control"
+                  id="feature-ports"
+                  name="feature-ports"
+                  [(ngModel)]="modifyFeatureFormInfo.ports"
+                  rows="2"></textarea>
+      </div>
+      <div class="row">
+        <label class="form-label" for="feature-description">Volumes Binding</label>
+        <textarea class="form-control"
+                  id="feature-volumes"
+                  name="feature-volumes"
+                  [(ngModel)]="modifyFeatureFormInfo.volumes"
+                  rows="2"></textarea>
+      </div>
+    </div>
+  </div>
+</form>

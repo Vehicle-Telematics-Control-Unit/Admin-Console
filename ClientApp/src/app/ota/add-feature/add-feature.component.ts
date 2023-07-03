@@ -29,8 +29,20 @@ export class AddFeatureComponent implements OnInit {
   }
 
   onSubmit() {
-    this._OTA_Data.publishRelease(this.addFeatureFormInfo).subscribe(res => {
+    this._OTA_Data.publishfeature(this.addFeatureFormInfo).subscribe(res => {
       alert("Feature published successfully");
+      this._OTA_Data.getTcuModels().subscribe((res: any) => {
+        this.modelsInfo = res.models;
+      });
+
+      this._OTA_Data.getAppReleases().subscribe((res: any) => {
+        this.releasesInfo = res.apps;
+        this._OTA_Data.getAppReleases().subscribe((res: any) => {
+          this.releasesInfo = res.apps
+        });
+      });
+
     });
+
   }
 }

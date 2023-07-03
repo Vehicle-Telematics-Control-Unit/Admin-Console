@@ -20,10 +20,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     NgSelectModule,
     RouterModule.forRoot([
-      { path: 'OTA', component: AddFeatureComponent, pathMatch: 'full' },
-      { path: 'OTA/config', component: ConfigureFeatureComponent, pathMatch: 'full' },
-      //{ path: 'counter', component: CounterComponent },
-      //{ path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
+      { path: 'admin/OTA', component: AddFeatureComponent, pathMatch: 'full', canActivate: [AuthorizeGuard] },
+      { path: 'admin/OTA/config', component: ConfigureFeatureComponent, pathMatch: 'full', canActivate: [AuthorizeGuard] }
     ])
   ],
   providers: [

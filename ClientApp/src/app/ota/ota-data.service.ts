@@ -25,10 +25,29 @@ export class OTADataService {
     });
   }
 
+  public getFeatureInfo(featureId: number) {
+    return this._httpClient.get('/api/OTA/getFeatures/' + featureId.toString(), {
+      headers: this.headers
+    });
+  }
 
-  public publishRelease(addFeatureFormInfo: any) {
+  public getFeatures() {
+    return this._httpClient.get('/api/OTA/getFeatures/', {
+      headers: this.headers
+    });
+  }
+
+  public publishfeature(addFeatureFormInfo: any) {
     return this._httpClient.post('/api/OTA/publishFeature/', addFeatureFormInfo, {
       headers: this.headers
     });
   }
+
+  public modifyfeature(modifiyFeatureInfo: any) {
+    return this._httpClient.put('/api/OTA/modifyFeature/', modifiyFeatureInfo, {
+      headers: this.headers
+    });
+  }
+
+
 }

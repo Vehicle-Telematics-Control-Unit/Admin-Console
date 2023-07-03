@@ -15,11 +15,11 @@ namespace Admin_Console.Models
         public DateTime ReleaseDate { get; set; }
         public DateTime LatestUpdate { get; set; }
         public string HexDigest { get; set; } = null!;
-        public decimal[]? ExposedPorts { get; set; }
         public string[]? Volumes { get; set; }
         public string[]? EnvVariables { get; set; }
         public long AppId { get; set; }
         public long? FeatureId { get; set; }
+        public string[]? ExposedPorts { get; set; }
 
         public virtual Feature? Feature { get; set; }
         public virtual ICollection<Feature> Features { get; set; }

@@ -1,6 +1,7 @@
 using Admin_Console.Data;
 using Admin_Console.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,16 +31,24 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddIdentityCore<BackEndApplicationUser>()
                 .AddEntityFrameworkStores<BackEndApplicationDbContext>();
 
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
 
-builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+builder.Services.AddAuthentication().AddIdentityServerJwt();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 var app = builder.Build();
+
+var forwardOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+    RequireHeaderSymmetry = false
+};
+
+forwardOptions.KnownNetworks.Clear();
+forwardOptions.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

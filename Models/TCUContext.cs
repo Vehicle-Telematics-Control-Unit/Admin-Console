@@ -31,10 +31,11 @@ namespace Admin_Console.Models
         public virtual DbSet<Feature> Features { get; set; } = null!;
         public virtual DbSet<LockRequest> LockRequests { get; set; } = null!;
         public virtual DbSet<Model> Models { get; set; } = null!;
+        public virtual DbSet<ModelsFeature> ModelsFeatures { get; set; } = null!;
         public virtual DbSet<Otptoken> Otptokens { get; set; } = null!;
         public virtual DbSet<RequestStatus> RequestStatuses { get; set; } = null!;
         public virtual DbSet<Tcu> Tcus { get; set; } = null!;
-        public virtual DbSet<TcuFeature> TcuFeatures { get; set; } = null!;
+        public virtual DbSet<Tcufeature> Tcufeatures { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -98,6 +99,9 @@ namespace Admin_Console.Models
 
             modelBuilder.Entity<AspNetUser>(entity =>
             {
+                entity.HasIndex(e => e.UserName, "UK_AspNetUsers")
+                    .IsUnique();
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
@@ -290,6 +294,24 @@ namespace Admin_Console.Models
                 entity.Property(e => e.Id).UseIdentityAlwaysColumn();
             });
 
+            modelBuilder.Entity<ModelsFeature>(entity =>
+            {
+                entity.HasKey(e => new { e.ModelId, e.FeatureId })
+                    .HasName("PrimaryKey");
+
+                entity.HasOne(d => d.Feature)
+                    .WithMany(p => p.ModelsFeatures)
+                    .HasForeignKey(d => d.FeatureId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Feature_Foriegn");
+
+                entity.HasOne(d => d.Model)
+                    .WithMany(p => p.ModelsFeatures)
+                    .HasForeignKey(d => d.ModelId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Model_FOREIGN");
+            });
+
             modelBuilder.Entity<Otptoken>(entity =>
             {
                 entity.ToTable("otptokens");
@@ -332,6 +354,7 @@ namespace Admin_Console.Models
                 entity.HasOne(d => d.Model)
                     .WithMany(p => p.Tcus)
                     .HasForeignKey(d => d.ModelId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("TCU_Model");
 
                 entity.HasOne(d => d.User)
@@ -341,19 +364,25 @@ namespace Admin_Console.Models
                     .HasConstraintName("TCU_AspNetUsers");
             });
 
-            modelBuilder.Entity<TcuFeature>(entity =>
+            modelBuilder.Entity<Tcufeature>(entity =>
             {
                 entity.HasKey(e => new { e.TcuId, e.FeatureId })
-                    .HasName("PrimaryKey");
+                    .HasName("TCUFeatures_pkey");
+
+                entity.ToTable("TCUFeatures");
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("true");
 
                 entity.HasOne(d => d.Feature)
-                    .WithMany(p => p.TcuFeatures)
+                    .WithMany(p => p.Tcufeatures)
                     .HasForeignKey(d => d.FeatureId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Feature_Foriegn");
+                    .HasConstraintName("Feature_FOREIGN");
 
                 entity.HasOne(d => d.Tcu)
-                    .WithMany(p => p.TcuFeatures)
+                    .WithMany(p => p.Tcufeatures)
                     .HasForeignKey(d => d.TcuId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("TCU_FOREIGN");
